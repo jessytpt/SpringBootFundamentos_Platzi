@@ -52,7 +52,7 @@ public class Post {
     public Post(Long id, String description, User user) {
         this.id = id;
         this.description = description;
-        this.user = user;
+       // this.user = user;
     }
 
     public Post() {
