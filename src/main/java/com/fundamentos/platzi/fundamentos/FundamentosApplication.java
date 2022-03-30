@@ -9,6 +9,7 @@ import com.fundamentos.platzi.fundamentos.entity.User;
 import com.fundamentos.platzi.fundamentos.pojo.UserPojo;
 import com.fundamentos.platzi.fundamentos.repository.EmployeRepository;
 import com.fundamentos.platzi.fundamentos.repository.UserRepository;
+import com.fundamentos.platzi.fundamentos.services.EmployeService;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ public class FundamentosApplication implements CommandLineRunner {
 	@Autowired
 	private EmployeRepository employeRepository;
 
+	@Autowired
+	private EmployeService employeService;
+
 	/*
 	public FundamentosApplication(ComponentDependency componentDependency){
 		this.componentDependency = componentDependency;
@@ -68,7 +72,8 @@ public class FundamentosApplication implements CommandLineRunner {
 		//saveUsersInDataBase();
 		//getInformationJpqlFromUder();
 		saveEmploye();
-		getEmployeEmeail();
+		//getEmployeEmeail();
+		//saveWithErrorTransaccional();
 	}
 
 	/*private  void getInformationJpqlFromUder(){
@@ -118,11 +123,28 @@ public class FundamentosApplication implements CommandLineRunner {
 		employeRepository.findByName_employee("Jessenia")
 				.stream()
 				.forEach(employe -> LOGGER.info("Usuario con query "+employe));
-				*/
+
 		employeRepository.findByNameLike("%user%")
 				.stream()
 				.forEach(user -> LOGGER.info("Usuario findByNameLike "+ user));
+		*/
+		LOGGER.info(employeRepository.getAllByEmail("nelson@nttdata.com")
+				.orElseThrow(()->new RuntimeException("No se encontró")));
 
+
+
+	}
+
+	private void saveWithErrorTransaccional(){
+		Employe employe1 = new Employe("test1","test1@nttdata.com");
+		Employe employe2 = new Employe("test2","test2@nttdata.com");
+		Employe employe3 = new Employe("test3","test3@nttdata.com");
+		Employe employe4 = new Employe("test4","test4@nttdata.com");
+		List<Employe> employeList = Arrays.asList(employe1,employe2,employe3,employe4);
+
+		employeService.saveTransactional(employeList);
+		employeService.getAllEmployes().stream()
+				.forEach(employe -> System.out.println(employe.toString()));
 	}
 
 	public void ejemplosAnteriores(){
